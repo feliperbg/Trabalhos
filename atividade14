@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Atividade 14</title>
+    <style>
+        body {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background: rgb(82, 189, 190);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        .container {
+            display: flex;
+            width: 95%;
+            max-width: 1200px;
+            gap: 20px;
+            background: #fff;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .tools-board {
+            width: 280px;
+            padding: 15px 20px;
+            border-radius: 10px;
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+        }
+
+        .tools-board .row {
+            margin-bottom: 20px;
+        }
+
+        .row .title {
+            font-size: 16px;
+            font-weight: 500;
+            margin-bottom: 10px;
+        }
+
+        .row .options {
+            list-style: none;
+            margin: 10px 0 0 5px;
+            padding: 0;
+        }
+
+        .option #color-picker {
+            opacity: 0;
+            cursor: pointer;
+            height: 0;
+            width: 0;
+        }
+
+        .option #color-display {
+            height: 40px;
+            width: 40px;
+            border-radius: 50%;
+            border: 2px solid #fff;
+            box-shadow: 0 0 5px rgba(0,0,0,0.2);
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .option #color-display:hover {
+            transform: scale(1.1);
+        }
+
+        .control-group {
+            margin-top: 20px;
+        }
+
+        .control-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #555;
+        }
+
+        .control-group input[type="range"] {
+            width: 100%;
+            cursor: pointer;
+        }
+
+        .drawing-board {
+            flex: 1;
+            overflow: hidden;
+        }
+
+        .drawing-board canvas {
+            width: 100%;
+            height: 100%;
+            border-radius: 10px;
+            border: 1px solid #dee2e6;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <section class="tools-board">
+            <div class="row">
+                <h3 class="title">Transformações</h3>
+                <div class="control-group">
+                    <label for="translateX">Translação X: <span id="translateXValue">0</span>px</label>
+                    <input type="range" id="translateX" min="-200" max="200" value="0">
+                </div>
+                <div class="control-group">
+                    <label for="translateY">Translação Y: <span id="translateYValue">0</span>px</label>
+                    <input type="range" id="translateY" min="-200" max="200" value="0">
+                </div>
+                <div class="control-group">
+                    <label for="scale">Escala: <span id="scaleValue">1.0</span>x</label>
+                    <input type="range" id="scale" min="10" max="200" value="100">
+                </div>
+                <div class="control-group">
+                    <label for="rotation">Rotação: <span id="rotationValue">0</span>°</label>
+                    <input type="range" id="rotation" min="0" max="270" value="0" step="90">
+                </div>
+            </div>
+        </section>
+        <section class="drawing-board">
+            <canvas id="mainCanvas" width="500" height="500"></canvas>
+        </section>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const canvas = document.getElementById('mainCanvas');
+            const ctx = canvas.getContext('2d');
+            
+            const controls = {
+                translateX: document.getElementById('translateX'),
+                translateY: document.getElementById('translateY'),
+                scale: document.getElementById('scale'),
+                rotation: document.getElementById('rotation'),
+            };
+            const values = {
+                translateXValue: document.getElementById('translateXValue'),
+                translateYValue: document.getElementById('translateYValue'),
+                scaleValue: document.getElementById('scaleValue'),
+                rotationValue: document.getElementById('rotationValue'),
+            };
+
+            let transformParams = { x: 0, y: 0, s: 1.0, r: 0 };
+            let baseVertices = [];
+            let faces = [];
+            let faceColors = [];
+
+            function resizeCanvas() {
+                const board = document.querySelector('.drawing-board');
+                canvas.width = board.clientWidth;
+                canvas.height = board.clientHeight;
+                DesenhaIsocaedro();
+            }
+
+            function inicializarIcosaedro() {
+                const R_interno = Math.min(canvas.width, canvas.height) / 2.5; 
+                const R_externo = R_interno / 1.07;
+            
+                baseVertices.length = 0;
+                faces.length = 0;
+                faceColors.length = 0;
+
+                baseVertices.push({ x: 0, y: 0 });
+
+                for (let i = 0; i < 3; i++) {
+                    const angle = i * (2 * Math.PI / 3) - (Math.PI / 2);
+                    baseVertices.push({ x: Math.cos(angle) * R_interno, y: Math.sin(angle) * R_interno });
+                }
+
+                for (let i = 0; i < 3; i++) {
+                    const angle = i * (2 * Math.PI / 3) + (Math.PI / 2);
+                    baseVertices.push({ x: Math.cos(angle) * (R_interno / 2), y: Math.sin(angle) * (R_interno / 2) });
+                }
+
+                for (let i = 0; i < 3; i++) {
+                    const angle = i * (2 * Math.PI / 3) + (Math.PI / 2);
+                    baseVertices.push({ x: Math.cos(angle) * R_externo, y: Math.sin(angle) * R_externo });
+                }
+
+                const allFaceDefinitions = [
+                    [1, 5, 6], [2, 6, 4], [4, 5, 3], [4, 5, 6],
+                    [1, 9, 6], [2, 4, 7], [3, 4, 7], [5, 3, 8], [5, 1, 8], [6, 9, 2]
+                ];
+                
+                for (const faceDef of allFaceDefinitions) {
+                    faces.push(faceDef);
+                    faceColors.push(CorRGB_Random());
+                }
+                DesenhaIsocaedro();
+            }
+
+            function isPointInTriangle(p, p0, p1, p2) {
+                const s = p0.y * p2.x - p0.x * p2.y + (p2.y - p0.y) * p.x + (p0.x - p2.x) * p.y;
+                const t = p0.x * p1.y - p0.y * p1.x + (p0.y - p1.y) * p.x + (p1.x - p0.x) * p.y;
+                if ((s < 0) != (t < 0) && s != 0 && t != 0) return false;
+                const A = -p1.y * p2.x + p0.y * (p2.x - p1.x) + p0.x * (p1.y - p2.y) + p1.x * p2.y;
+                return A < 0 ? (s <= 0 && s + t >= A) : (s >= 0 && s + t <= A);
+            }
+
+            function MudarCor(event) {
+                const rect = canvas.getBoundingClientRect();
+                const clickX = event.clientX - rect.left;
+                const clickY = event.clientY - rect.top;
+                const transformedVertices = aplicarTransformacoes(
+                    JSON.parse(JSON.stringify(baseVertices)), 
+                    transformParams.x, transformParams.y, transformParams.r, transformParams.s
+                );
+
+                for (let i = faces.length - 1; i >= 0; i--) {
+                    const faceVertexIndices = faces[i];
+                    if (!faceVertexIndices) continue;
+                    const p0 = transformedVertices[faceVertexIndices[0]];
+                    const p1 = transformedVertices[faceVertexIndices[1]];
+                    const p2 = transformedVertices[faceVertexIndices[2]];
+
+                    if (isPointInTriangle({ x: clickX, y: clickY }, p0, p1, p2)) {
+                        faceColors[i] = CorRGB_Random();
+                        DesenhaIsocaedro();
+                        return;
+                    }
+                }
+            }
+
+            function translacao(points, tx, ty) {
+                for (let i = 0; i < points.length; i++) {
+                    points[i].x += tx;
+                    points[i].y += ty;
+                }
+                return points;
+            }
+
+            function rotacao(points, angulo) {
+                const cosA = Math.cos(angulo);
+                const sinA = Math.sin(angulo);
+
+                for (let i = 0; i < points[i].length; i++) {
+                    
+                    // 1. Translate point[i] to origin
+                    const tempX = points[i].x - point[0].x;
+                    const tempY = points[i].y - point[0].y;
+
+                    // 2. Rotate point[i]
+                    const rotatedX = tempX * cosA - tempY * sinA;
+                    const rotatedY = tempX * sinA + tempY * cosA;
+
+                    // 3. Translate point[i] back
+                    points[i].x = rotatedX +  point[0].x;
+                    points[i].y = rotatedY + point[0].y;
+                }
+                return points;
+            }
+
+            function escala(points, esc) {
+                for (let i = 0; i < points.length; i++) {
+                    points[i].x *= esc;
+                    points[i].y *= esc;
+                }
+                return points;
+            }
+
+            function aplicarTransformacoes(points, tx, ty, angulo, esc) {
+                points = translacao(points, tx, ty);
+                points = rotacao(points, angulo);
+                points = escala(points, esc);
+                return points;
+            }
+
+            function DesenhaIsocaedro() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                if (baseVertices.length === 0) return;
+
+                let points = aplicarTransformacoes(
+                    JSON.parse(JSON.stringify(baseVertices)), 
+                    transformParams.x + canvas.width / 2, 
+                    transformParams.y + canvas.height / 2, 
+                    transformParams.r, 
+                    transformParams.s
+                );
+
+                faces.forEach((face, index) => {
+                    DesenhaFace(face, points, faceColors[index]);
+                });
+            }
+
+            function DesenhaFace(faceIndices, points, cor) {
+                ctx.beginPath();
+                ctx.moveTo(points[faceIndices[0]].x, points[faceIndices[0]].y);
+                ctx.lineTo(points[faceIndices[1]].x, points[faceIndices[1]].y);
+                ctx.lineTo(points[faceIndices[2]].x, points[faceIndices[2]].y);
+                ctx.closePath();
+                ctx.fillStyle = cor;
+                ctx.fill();
+                ctx.strokeStyle = "black";
+                ctx.lineWidth = 1;
+                ctx.stroke();
+            }
+
+            function CorRGB_Random() {
+                let r = Math.floor(Math.random() * 256);
+                let g = Math.floor(Math.random() * 256);
+                let b = Math.floor(Math.random() * 256);
+                return `rgb(${r},${g},${b})`;
+            }
+
+            function updateDisplayValues() {
+                values.translateXValue.textContent = transformParams.x.toFixed(0);
+                values.translateYValue.textContent = transformParams.y.toFixed(0);
+                values.scaleValue.textContent = transformParams.s.toFixed(2);
+                values.rotationValue.textContent = (transformParams.r * 180 / Math.PI).toFixed(0);
+            }
+
+            function setupEventListeners() {
+                window.addEventListener('resize', resizeCanvas);
+
+                for (const key in controls) {
+                    controls[key].addEventListener('input', (e) => {
+                        const value = parseFloat(e.target.value);
+                        if (key === 'scale') transformParams.s = value / 100.0;
+                        else if (key === 'rotation') transformParams.r = value * Math.PI / 180.0;
+                        else if (key === 'translateX') transformParams.x = value;
+                        else if (key === 'translateY') transformParams.y = value;
+
+                        updateDisplayValues();
+                        DesenhaIsocaedro();
+                    });
+                }
+
+                canvas.addEventListener('click', MudarCor);
+            }
+
+            setupEventListeners();
+            resizeCanvas();
+            inicializarIcosaedro();
+        });
+    </script>
+</body>
+</html>

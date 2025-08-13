@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Projeto ICG - Icosaedro Paint</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <section class="tools-board">
+
+            <div class="row">
+                <h3 class="title">Transformações</h3>
+                <div class="control-group">
+                    <label for="translateX">Translação X: <span id="translateXValue">0</span>px</label>
+                    <input type="range" id="translateX" min="-200" max="200" value="0">
+                </div>
+                <div class="control-group">
+                    <label for="translateY">Translação Y: <span id="translateYValue">0</span>px</label>
+                    <input type="range" id="translateY" min="-200" max="200" value="0">
+                </div>
+                <div class="control-group">
+                    <label for="scale">Escala: <span id="scaleValue">1.0</span>x</label>
+                    <input type="range" id="scale" min="10" max="200" value="100">
+                </div>
+                <div class="control-group">
+                    <label for="rotation">Rotação: <span id="rotationValue">0</span>°</label>
+                    <input type="range" id="rotation" min="0" max="270" value="0" step="90">
+                </div>
+                <div class="control-group">
+                    <button id="resetButton">Resetar Transformações</button>
+                </div>
+                <div class="control-group">
+                    <button id="newButton">Gerar um novo icosaedro em 2D</button>
+                </div>
+                <div class="control-group">
+                    <button id="exportButton">Exportar Icosaedro</button>
+                </div>
+                <div class="control-group">
+                    <button id="importButton">Importar Icosaedro</button>
+                </div>
+            </div>
+        </section>
+        <section class="drawing-board">
+            <canvas id="mainCanvas" width="500" height="500"></canvas>
+        </section>
+    </div>
+    <script src="script.js"></script>
+    </body>
+</html>

@@ -1,159 +1,121 @@
-/* Estilos gerais e do container principal */
-    body {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        min-height: 100vh;
-        background: rgb(82, 189, 190);
-        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    }
+:root {
+    --borda-cor: #dee2e6;
+    --fundo-painel: #f8f9fa;
+    --fundo-body: #f0f2f5;
+    --cor-texto: #333;
+    --cor-realce: #007bff;
+}
+body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    background: var(--fundo-body);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    margin: 0;
+}
+.container {
+    display: flex;
+    width: 95%;
+    max-width: 1200px;
+    gap: 20px;
+    background: #fff;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+.tools-board {
+    width: 280px;
+    padding: 15px 20px;
+    border-radius: 10px;
+    background: var(--fundo-painel);
+    border: 1px solid var(--borda-cor);
+}
+.row {
+    margin-bottom: 25px;
+}
+.title {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 15px;
+    color: var(--cor-texto);
+    border-bottom: 1px solid var(--borda-cor);
+    padding-bottom: 10px;
+}
+.control-group {
+    margin-top: 15px;
+}
+.control-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: #555;
+    font-size: 14px;
+}
+.control-group input[type="range"], .control-group select {
+    width: 100%;
+    cursor: pointer;
+}
+.control-group select {
+    padding: 8px;
+    border-radius: 6px;
+    border: 1px solid var(--borda-cor);
+}
+.drawing-board {
+    flex: 1;
+    overflow: hidden;
+}
+.drawing-board canvas {
+    width: 100%;
+    height: 100%;
+    border-radius: 10px;
+    border: 1px solid var(--borda-cor);
+}
+.paint-controls {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+.color-picker-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+#color-display {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: 2px solid var(--borda-cor);
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+#color-display:hover {
+    transform: scale(1.1);
+}
+#color-picker {
+    opacity: 0;
+    width: 0;
+    height: 0;
+    position: absolute;
+}
 
-    .container {
-        display: flex;
-        width: 95%;
-        max-width: 1200px;
-        gap: 20px;
-        background: #fff;
-        border-radius: 10px;
-        padding: 20px;
-        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-    }
-
-    /* Seção de Ferramentas (Esquerda) */
-    .tools-board {
-        width: 280px;
-        padding: 15px 20px;
-        border-radius: 10px;
-        background: #f8f9fa;
-        border: 1px solid #dee2e6;
-    }
-
-    .tools-board .row {
-        margin-bottom: 20px;
-    }
-
-    .row .title {
-        font-size: 16px;
-        font-weight: 500;
-        margin-bottom: 10px;
-    }
-
-    .row .options {
-        list-style: none;
-        margin: 10px 0 0 5px;
-        padding: 0;
-    }
-    
-    .options .option {
-        display: flex;
-        cursor: pointer;
-        align-items: center;
-        margin-bottom: 10px;
-    }
-    
-    .option #color-picker {
-        opacity: 0;
-        cursor: pointer;
-        height: 0;
-        width: 0;
-    }
-    
-    .option #color-display {
-        height: 40px;
-        width: 40px;
-        border-radius: 50%;
-        border: 2px solid #fff;
-        box-shadow: 0 0 5px rgba(0,0,0,0.2);
-        cursor: pointer;
-        transition: transform 0.2s;
-    }
-
-    .option #color-display:hover {
-        transform: scale(1.1);
-    }
-
-    /* Estilos para os sliders de transformação */
-    .control-group {
-        margin-top: 20px;
-    }
-    
-    .control-group label {
-        display: block;
-        margin-bottom: 8px;
-        font-weight: 500;
-        color: #555;
-    }
-
-    .control-group input[type="range"] {
-        width: 100%;
-        cursor: pointer;
-    }
-
-    /* Seção do Canvas (Direita) */
-    .drawing-board {
-        flex: 1;
-        overflow: hidden;
-    }
-
-    .drawing-board canvas {
-        width: 100%;
-        height: 100%;
-        border-radius: 10px;
-        border: 1px solid #dee2e6;
-    }
-
-    #resetButton {
-        width: 100%;
-        padding: 8px;
-        margin-top: 10px;
-        background-color: #4CAF50;
-        color: white;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
-        transition: background-color 0.3s;
-    }
-    #resetButton:hover {
-        background-color: #45a049;
-    }
-    #newButton {
-        width: 100%;
-        padding: 8px;
-        background-color: #007BFF;
-        color: white;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
-        transition: background-color 0.3s;
-    }
-    #newButton:hover {
-        background-color: #0056b3;
-    } 
-
-    #exportButton {
-        width: 100%;
-        padding: 8px;
-        background-color: #6c757d;
-        color: white;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
-        transition: background-color 0.3s;
-    }
-    #exportButton:hover {
-        background-color: #5a6268;
-    }
-
-    #importButton {
-        width: 100%;
-        padding: 8px;
-        background-color: #17a2b8;
-        color: white;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
-        transition: background-color 0.3s;
-    }
-    #importButton:hover {
-        background-color: #138496;
-    }
+.button-group {
+    display: flex;
+    gap: 10px;
+}
+#paint-btn, #reset-btn, #clear-paint-btn {
+    padding: 10px;
+    border: 1px solid var(--borda-cor);
+    background: var(--cor-realce);
+    color: white;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 14px;
+    transition: background-color 0.2s;
+    width: 100%;
+    flex-grow: 1;
+}
+#paint-btn:hover, #reset-btn:hover, #clear-paint-btn:hover {
+    background-color: #0056b3;
+}

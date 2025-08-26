@@ -40,7 +40,7 @@ document.addEventListener('DOMContentLoaded', () => {
             ctx.lineTo(pontos[i].x, pontos[i].y);
         }
         ctx.closePath();
-    }
+    }    
 
     function corLinha(ctx, cor){
         ctx.strokeStyle = cor;
@@ -104,41 +104,46 @@ document.addEventListener('DOMContentLoaded', () => {
         const finalTx = transformParams.tx + canvas.width / 2;
         const finalTy = transformParams.ty + canvas.height / 2;
         pontos = translacao(pontos, finalTx, finalTy);
+
         for (let i = 0; i < faces.length; i++) {
             const pontosDoPoligono = faces[i].map(indice => pontos[indice]);
             desenhaPoligono(ctx, pontosDoPoligono);
             preenchimento(ctx, faceColors[i]);
-            corLinha(ctx, 'rgb(0,0,0)');
+            corLinha(ctx, "rgb(0,0,0)");
         }
     }
     
     // --- INICIALIZAÇÃO E HELPERS ---
     function inicializarIcosaedro() {
         const R_interno = Math.min(canvas.width, canvas.height) / 3.5;
-        const R_externo = R_interno / 1.07;
+        const R_externo = R_interno / 1.07; // pra ficar igual da imagem do projeto
         baseVertices = [];
         faces = [];
         faceColors = [];
         baseVertices.push({ x: 0, y: 0 });
+        //Vértices do triangulo maior
         for (let i = 0; i < 3; i++) {
             const angle = i * (2 * Math.PI / 3) - (Math.PI / 2);
             baseVertices.push({ x: Math.cos(angle) * R_interno, y: Math.sin(angle) * R_interno });
         }
+        //Vértices do triangulo menor
         for (let i = 0; i < 3; i++) {
             const angle = i * (2 * Math.PI / 3) + (Math.PI / 2);
             baseVertices.push({ x: Math.cos(angle) * (R_interno / 2), y: Math.sin(angle) * (R_interno / 2) });
         }
+        //Vértices de fora 
         for (let i = 0; i < 3; i++) {
             const angle = i * (2 * Math.PI / 3) + (Math.PI / 2);
             baseVertices.push({ x: Math.cos(angle) * R_externo, y: Math.sin(angle) * R_externo });
         }
-        const allFaceDefinitions = [
+        //Faces
+        const ligacoesFaces = [
             [1, 5, 6], [2, 6, 4], [4, 5, 3], [4, 5, 6],
             [2, 4, 7], [3, 4, 7], [5, 3, 8], [5, 1, 8], [1, 9, 6], [6, 9, 2]
         ];
-        for (const faceDef of allFaceDefinitions) {
+        for (const faceDef of ligacoesFaces) {
             faces.push(faceDef);
-            faceColors.push(corInicial); // Usa a cor inicial padrão
+            faceColors.push(corInicial);
         }
         pivo = {x: 0, y: 0};
         popularSeletorDeFaces();
@@ -209,12 +214,8 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             redesenharCena();
         });
-
-        // NOVO EVENT LISTENER PARA O BOTÃO DE LIMPAR
         paintControls.clearPaintBtn.addEventListener('click', limparPintura);
     }
-    
-    // --- PONTO DE ENTRADA ---
     setupEventListeners();
     resizeCanvas();
 });

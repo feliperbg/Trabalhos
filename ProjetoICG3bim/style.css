@@ -74,7 +74,7 @@ body {
 .paint-controls {
     display: flex;
     flex-direction: column;
-    gap: 15px;
+    gap: 5px;
 }
 .color-picker-wrapper {
     display: flex;
@@ -101,7 +101,7 @@ body {
 
 .button-group {
     display: flex;
-    gap: 10px;
+    gap: 5px;
 }
 #paint-btn, #reset-btn, #clear-paint-btn {
     padding: 10px;

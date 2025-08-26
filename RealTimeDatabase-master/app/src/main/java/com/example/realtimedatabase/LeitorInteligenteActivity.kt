@@ -9,9 +9,6 @@ import java.io.IOException
 import android.net.Uri
 import android.speech.tts.TextToSpeech
 import android.widget.ImageView
-import com.google.mlkit.vision.common.InputImage
-import com.google.mlkit.vision.text.TextRecognition
-import com.google.mlkit.vision.text.latin.TextRecognizerOptions
 import androidx.activity.result.contract.ActivityResultContracts
 import java.util.Locale
 import androidx.activity.result.PickVisualMediaRequest
@@ -22,8 +19,9 @@ import androidx.core.content.FileProvider
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Date
-
-// A classe foi renomeada de MainActivity para LeitorInteligenteActivity
+import com.google.mlkit.vision.common.InputImage
+import com.google.mlkit.vision.text.TextRecognition
+import com.google.mlkit.vision.text.latin.TextRecognizerOptions
 class LeitorInteligenteActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
 
     // Views
@@ -34,6 +32,7 @@ class LeitorInteligenteActivity : AppCompatActivity(), TextToSpeech.OnInitListen
     private lateinit var btnFalar: Button
     private lateinit var btnPausar: Button
     private lateinit var btnRepetir: Button
+    private lateinit var btnapagar: Button
 
     // TextToSpeech
     private lateinit var tts: TextToSpeech

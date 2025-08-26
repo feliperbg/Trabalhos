@@ -13,7 +13,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="Leitor Inteligente de Texto"
-        android:textSize="22sp"
+        android:textSize="12sp"
         android:textStyle="bold"
         android:gravity="center"
         android:layout_marginBottom="16dp"
@@ -107,6 +107,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Pausar"
+            android:enabled="false"
+            android:layout_marginEnd="8dp"/>
+        <Button
+            android:id="@+id/btnapagar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="apagar"
             android:enabled="false"
             android:layout_marginEnd="8dp"/>
         <Button

@@ -24,9 +24,9 @@ document.addEventListener('DOMContentLoaded', () => {
         clearPaintBtn: document.getElementById('clear-paint-btn'),
     };
 
-    const initialState = { tx: 0, ty: 0, s: 1.0, r: 0 };
-    const initialPaintColor = 'rgb(255,255,255)'; // Cor branca como padrão
-    let transformParams = {...initialState};
+    const estadoInicial = { tx: 0, ty: 0, s: 1.0, r: 0 };
+    const corInicial = 'rgb(255,255,255)'; // Cor branca como padrão
+    let transformParams = {...estadoInicial};
     let baseVertices = [];
     let faces = [];
     let faceColors = [];
@@ -56,6 +56,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function translacao(pontos, tx = 0, ty = 0) {
         return pontos.map(p => ({ x: p.x + tx, y: p.y + ty }));
     }
+
     function rotacao(pontos, angulo, pivo) {
         const cosA = Math.cos(angulo);
         const sinA = Math.sin(angulo);
@@ -67,6 +68,7 @@ document.addEventListener('DOMContentLoaded', () => {
             return { x: rotatedX + pivo.x, y: rotatedY + pivo.y };
         });
     }
+
     function escala(pontos, fatorX, fatorY, pivo) {
             return pontos.map(p => {
             const tempX = p.x - pivo.x;
@@ -78,23 +80,17 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function resetarTransformacoes() {
-        transformParams = { ...initialState };
-        controls.translateX.value = initialState.tx;
-        controls.translateY.value = initialState.ty;
-        controls.scale.value = initialState.s * 100;
-        controls.rotation.value = initialState.r;
+        transformParams = { ...estadoInicial };
+        controls.translateX.value = estadoInicial.tx;
+        controls.translateY.value = estadoInicial.ty;
+        controls.scale.value = estadoInicial.s * 100;
+        controls.rotation.value = estadoInicial.r;
         updateDisplayValues();
         redesenharCena();
     }
 
-    // --- NOVA FUNÇÃO PARA LIMPAR A PINTURA ---
-    /**
-     * Reseta todas as cores das faces para a cor inicial (branco).
-     */
     function limparPintura() {
-        // Preenche o array de cores com a cor padrão.
-        faceColors.fill(initialPaintColor);
-        // Redesenha a cena para aplicar a mudança visualmente.
+        faceColors.fill(corInicial);
         redesenharCena();
     }
 
@@ -142,7 +138,7 @@ document.addEventListener('DOMContentLoaded', () => {
         ];
         for (const faceDef of allFaceDefinitions) {
             faces.push(faceDef);
-            faceColors.push(initialPaintColor); // Usa a cor inicial padrão
+            faceColors.push(corInicial); // Usa a cor inicial padrão
         }
         pivo = {x: 0, y: 0};
         popularSeletorDeFaces();

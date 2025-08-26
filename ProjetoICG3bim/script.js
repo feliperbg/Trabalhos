@@ -2,7 +2,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const canvas = document.getElementById('mainCanvas');
     const ctx = canvas.getContext('2d');
 
-    // --- Referências aos Controles da UI ---
+    //Referências aos Controles
     const controls = {
         translateX: document.getElementById('translateX'),
         translateY: document.getElementById('translateY'),
@@ -30,7 +30,6 @@ document.addEventListener('DOMContentLoaded', () => {
     let baseVertices = [];
     let faces = [];
     let faceColors = [];
-    let pivo = { x: 0, y: 0 };
 
     function desenhaPoligono(ctx, pontos) {
         if (pontos.length < 3) return;
@@ -57,25 +56,21 @@ document.addEventListener('DOMContentLoaded', () => {
         return pontos.map(p => ({ x: p.x + tx, y: p.y + ty }));
     }
 
-    function rotacao(pontos, angulo, pivo) {
+    function rotacao(pontos, angulo) {
         const cosA = Math.cos(angulo);
         const sinA = Math.sin(angulo);
         return pontos.map(p => {
-            const tempX = p.x - pivo.x;
-            const tempY = p.y - pivo.y;
-            const rotatedX = tempX * cosA - tempY * sinA;
-            const rotatedY = tempX * sinA + tempY * cosA;
-            return { x: rotatedX + pivo.x, y: rotatedY + pivo.y };
+            const rotatedX = p.x * cosA - p.y * sinA;
+            const rotatedY = p.x * sinA + p.y * cosA;
+             return { x: rotatedX, y: rotatedY};
         });
     }
 
-    function escala(pontos, fatorX, fatorY, pivo) {
+    function escala(pontos, fatorX, fatorY) {
             return pontos.map(p => {
-            const tempX = p.x - pivo.x;
-            const tempY = p.y - pivo.y;
-            const scaledX = tempX * fatorX;
-            const scaledY = tempY * fatorY;
-            return { x: scaledX + pivo.x, y: scaledY + pivo.y };
+            const scaledX = p.x * fatorX;
+            const scaledY = p.y * fatorY;
+            return { x: scaledX, y: scaledY};
         });
     }
 
@@ -99,8 +94,8 @@ document.addEventListener('DOMContentLoaded', () => {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         if (baseVertices.length === 0) return;
         let pontos = baseVertices.map(p => ({ x: p.x, y: p.y }));
-        pontos = escala(pontos, transformParams.s, transformParams.s, pivo);
-        pontos = rotacao(pontos, transformParams.r, pivo);
+        pontos = escala(pontos, transformParams.s, transformParams.s);
+        pontos = rotacao(pontos, transformParams.r);
         const finalTx = transformParams.tx + canvas.width / 2;
         const finalTy = transformParams.ty + canvas.height / 2;
         pontos = translacao(pontos, finalTx, finalTy);
@@ -145,11 +140,11 @@ document.addEventListener('DOMContentLoaded', () => {
             faces.push(faceDef);
             faceColors.push(corInicial);
         }
-        pivo = {x: 0, y: 0};
         popularSeletorDeFaces();
         redesenharCena();
     }
 
+    // Eventos Front
     function popularSeletorDeFaces() {
         const selector = paintControls.faceSelector;
         selector.innerHTML = '';

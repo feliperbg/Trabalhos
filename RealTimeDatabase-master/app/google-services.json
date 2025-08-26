@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "516240389137",
+    "firebase_url": "https://realtimedatabase-master-default-rtdb.firebaseio.com",
+    "project_id": "realtimedatabase-master",
+    "storage_bucket": "realtimedatabase-master.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:516240389137:android:c2f18683387402a07cedb0",
+        "android_client_info": {
+          "package_name": "com.example.realtimedatabase"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCvnfWFNao07hNslb0BD7KkZ_bOG3_ZEwk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

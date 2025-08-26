@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">Leitor Inteligente de Texto</string>
+    <string name="selecionar_imagem">Selecionar Imagem</string>
+    <string name="abrir_camera">Abrir Câmera</string>
+    <string name="imagem_capturada_ou_selecionada">Imagem capturada ou selecionada</string>
+    <string name="texto_reconhecido_label">Texto Reconhecido:</string>
+    <string name="texto_reconhecido_vazio">Nenhum texto reconhecido ainda.</string>
+    <string name="falar">Falar</string>
+    <string name="pausar">Pausar</string>
+    <string name="repetir">Repetir</string>
+</resources>
